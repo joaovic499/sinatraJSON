@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sqlite3'
 require 'json'
+require 'bcrypt'
 
 DB = SQLite3::Database.new('usuarios.db', results_as_hash: true)
 
@@ -27,7 +28,7 @@ post '/usuarios' do
     content_type :json
     novo_usuario = JSON.parse(request.body.read)
     nome = novo_usuario['nome']
-    idade = novo_usuario['idade']
+    idade = BCrypt::Password.create(novo_usuario['idade']).to_s
     codigo = novo_usuario['codigo']
     
     DB.execute("INSERT INTO usuarios (nome, idade, codigo) VALUES (?, ?, ?)", [nome, idade, codigo])
@@ -39,7 +40,16 @@ post '/usuarios' do
 put '/usuarios/:id' do |id|
   content_type :json
   usuario_atualizado = JSON.parse(request.body.read)
-  DB.execute("UPDATE usuarios SET nome = ?, idade = ?, codigo = ? WHERE id = ?", [usuario_atualizado['nome'], usuario_atualizado['idade'], usuario_atualizado['codigo'], id])
+  nome = usuario_atualizado['nome']
+
+  nova_idade = usuario_atualizado['idade']
+  idade_criptografada = DB.get_first_value("SELECT idade FROM usuarios WHERE id = ? ", id)
+  idade_atual = BCrypt::Password.new(idade_criptografada).to_s
+  idadte_atual = nova_idade
+  nova_idade_criptografada = BCrypt::Password.create(idade_atual).to_s
+
+  codigo = usuario_atualizado['codigo']
+  DB.execute("UPDATE usuarios SET nome = ?, idade = ?, codigo = ? WHERE id = ?", [nome, nova_idade_criptografada, codigo, id])
   { message: "Usuário atualizado com sucesso!" }.to_json
 end
 
