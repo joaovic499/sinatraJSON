@@ -1,0 +1,6 @@
+************************************* Invoked: Tue Apr 23 22:52:50 2024
+[0] Arguments: C:\Users\joaov\AppData\Local\Temp\msys2-x86_64-20221028.exe
+[3] Operations sanity check succeeded.
+[4] Warning: Não é possível criar o ficheiro "lock"  "C:\Users\joaov\AppData\Local\Temp\msys2-x86_64-202210281234865.lock": O arquivo já está sendo usado por outro processo.
+ (0x00000020)
+[14] UnableToStart : Não foi possível iniciar instalador : Existe outra instância msys2-x86_64-20221028 em execução. Espere até que termine ou feche-a ou reinicie o sistema.
