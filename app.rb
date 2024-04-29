@@ -2,6 +2,12 @@ require 'sinatra'
 require 'sqlite3'
 require 'json'
 require 'bcrypt'
+require 'sinatra/cors'
+
+set :allow_origin, "*"
+set :allow_methods, "GET,HEAD,POST,PUT"
+set :allow_headers, "content-type,if-modified-since"
+set :expose_headers, "location,link"
 
 DB = SQLite3::Database.new('usuarios.db', results_as_hash: true)
 
@@ -43,10 +49,7 @@ put '/usuarios/:id' do |id|
   nome = usuario_atualizado['nome']
 
   nova_idade = usuario_atualizado['idade']
-  idade_criptografada = DB.get_first_value("SELECT idade FROM usuarios WHERE id = ? ", id)
-  idade_atual = BCrypt::Password.new(idade_criptografada).to_s
-  idadte_atual = nova_idade
-  nova_idade_criptografada = BCrypt::Password.create(idade_atual).to_s
+  nova_idade_criptografada = BCrypt::Password.create(nova_idade).to_s
 
   codigo = usuario_atualizado['codigo']
   DB.execute("UPDATE usuarios SET nome = ?, idade = ?, codigo = ? WHERE id = ?", [nome, nova_idade_criptografada, codigo, id])
