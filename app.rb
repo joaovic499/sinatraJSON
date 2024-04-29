@@ -5,7 +5,7 @@ require 'bcrypt'
 require 'sinatra/cors'
 
 set :allow_origin, "*"
-set :allow_methods, "GET,HEAD,POST,PUT"
+set :allow_methods, "GET,HEAD,POST,PUT,DELETE"
 set :allow_headers, "content-type,if-modified-since"
 set :expose_headers, "location,link"
 
